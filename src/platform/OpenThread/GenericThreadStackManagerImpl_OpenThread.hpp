@@ -961,6 +961,7 @@ template <class ImplClass>
 void GenericThreadStackManagerImpl_OpenThread<ImplClass>::TryNextNetwork()
 {
     otSockAddr targetAddr;
+    bool isRunning = otSeekerIsRunning(mOTInst);
 
     if (otSeekerSetUpNextConnection(mOTInst, &targetAddr) == OT_ERROR_NONE)
     {
@@ -969,7 +970,7 @@ void GenericThreadStackManagerImpl_OpenThread<ImplClass>::TryNextNetwork()
 
         DeviceLayer::SystemLayer().ScheduleLambda([this]() { SendRendezvousAnnouncement(); });
     }
-    else if (otSeekerIsRunning(mOTInst))
+    else if (isRunning)
     {
         otSeekerStop(mOTInst);
 
